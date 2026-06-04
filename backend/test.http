@@ -1,0 +1,6 @@
+POST http://localhost:3000/api/prompt/improve
+Content-Type: application/json
+
+{
+  "prompt": "I want to build a website"
+}
