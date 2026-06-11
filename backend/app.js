@@ -1,4 +1,5 @@
 var createError = require('http-errors');
+require("dotenv").config();
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -28,6 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get("/", (req, res) => {
   res.json({ message: "Promptica API is running" });
 });
+
+
 
 //app.use('/', indexRouter);
 //app.use('/users', usersRouter);

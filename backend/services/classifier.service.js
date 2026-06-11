@@ -4,14 +4,14 @@ function classifyPrompt(prompt) {
   const scores = {
     software: 0,
     education: 0,
-    marketing: 0,
-    general: 1
+    marketing: 0
   };
 
   // SOFTWARE SIGNALS
   const softwareKeywords = [
     "react", "node", "express", "api", "backend", "frontend",
-    "website", "app", "code", "database", "bug", "debug"
+    "website", "app", "code", "database", "bug", "debug",
+    "build", "create", "make", "dashboard", "system"
   ];
 
   softwareKeywords.forEach(word => {
@@ -36,13 +36,16 @@ function classifyPrompt(prompt) {
     if (text.includes(word)) scores.marketing += 2;
   });
 
-  // pick highest score
+  // find best category
   const best = Object.keys(scores).reduce((a, b) =>
     scores[a] > scores[b] ? a : b
   );
 
+  // safety fallback (IMPORTANT FIX)
+  const category = scores[best] === 0 ? "software" : best;
+
   return {
-    category: best,
+    category,
     scores
   };
 }

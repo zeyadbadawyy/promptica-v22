@@ -6,33 +6,49 @@ const softwareDebugging = require("./strategies/software.debugging");
 function runStrategy(category, intents, prompt) {
   const sections = [];
 
-  // SOFTWARE
+  const hasLearning = intents.includes("learning");
+  const hasBuilding = intents.includes("building");
+  const hasDebugging = intents.includes("debugging");
+
+  // DEFAULT BEHAVIOR (important fix)
+  const safeIntents = intents.length ? intents : ["building"];
+
   if (category === "software") {
-    if (intents.includes("learning")) {
-      sections.push(softwareLearning(prompt));
+
+    // PRIORITY ORDER (important)
+    if (hasDebugging) {
+      sections.push(softwareDebugging(prompt));
     }
 
-    if (intents.includes("building")) {
+    if (hasBuilding) {
       sections.push(softwareBuilding(prompt));
     }
 
-    if (intents.includes("debugging")) {
-      sections.push(softwareDebugging(prompt));
+    if (hasLearning) {
+      sections.push(softwareLearning(prompt));
+    }
+
+    // fallback if nothing matched
+    if (!sections.length) {
+      sections.push(softwareBuilding(prompt));
     }
   }
 
-  // EDUCATION
   if (category === "education") {
-    if (intents.includes("learning")) {
+    if (hasLearning) {
+      sections.push(educationLearning(prompt));
+    } else {
       sections.push(educationLearning(prompt));
     }
   }
 
-  if (sections.length === 0) {
-    return `Improve this prompt:\n\n${prompt}`;
-  }
+  return {
+  type: "strategy_output",
+  category,
+  intents,
+  content: sections
+};
 
-  return sections.join("\n\n====================================\n\n");
 }
 
 module.exports = { runStrategy };

@@ -85,15 +85,43 @@ function App() {
               </ul>
             </div>
 
+
+              
+            
             {/* IMPROVED PROMPT */}
             <div style={styles.cardFull}>
               <h3>Improved Prompt</h3>
-              <pre style={styles.pre}>
-                {typeof result.improved === "string"
-                  ? result.improved
-                  : JSON.stringify(result.improved, null, 2)}
-              </pre>
-            </div>
+
+              {result.improved?.category && (
+                <p>
+                  <strong>Category:</strong> {result.improved.category}
+                </p>
+              )}
+
+              {result.improved?.intents?.length > 0 && (
+                <>
+                  <p>
+                    <strong>Intents:</strong>
+                  </p>
+
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    {result.improved.intents.map((intent, i) => (
+                      <span key={i} style={styles.tag}>
+                        {intent}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+
+  <div style={{ marginTop: "20px" }}>
+    {(result.improved?.content || []).map((section, index) => (
+      <div key={index} style={styles.section}>
+        <pre style={styles.pre}>{section}</pre>
+      </div>
+    ))}
+  </div>
+</div>
           </div>
         )}
       </div>
@@ -102,6 +130,9 @@ function App() {
 }
 
 const styles = {
+  section: {
+  marginBottom: "20px",
+  },
   page: {
     minHeight: "100vh",
     background: "#0f172a",

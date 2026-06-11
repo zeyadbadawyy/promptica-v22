@@ -1,40 +1,109 @@
 function scorePrompt(prompt) {
   const text = prompt.toLowerCase();
 
-  let score = 50;
+  let score = 0;
+
   const missing = [];
   const suggestions = [];
 
-  if (text.length < 20) {
-    score -= 20;
-    missing.push("clarity");
-    suggestions.push("Add more detail");
+  // LENGTH
+
+  if (text.length >= 150) {
+    score += 25;
+  } else if (text.length >= 80) {
+    score += 15;
+  } else if (text.length >= 40) {
+    score += 8;
+  } else {
+    missing.push("details");
+    suggestions.push("Add more context and details");
   }
 
-  if (!text.includes("react") &&
-      !text.includes("node") &&
-      !text.includes("api")) {
-    score -= 15;
-    missing.push("tech stack");
-    suggestions.push("Specify technologies");
+  // CLEAR GOAL
+
+  if (
+    text.includes("build") ||
+    text.includes("create") ||
+    text.includes("make") ||
+    text.includes("learn") ||
+    text.includes("teach") ||
+    text.includes("understand") ||
+    text.includes("debug") ||
+    text.includes("fix")
+  ) {
+    score += 15;
+  } else {
+    missing.push("goal");
+    suggestions.push("Clearly state your objective");
   }
 
-  if (!text.includes("build") &&
-      !text.includes("create") &&
-      !text.includes("make")) {
-    score -= 10;
-    missing.push("objective");
-    suggestions.push("Define what you're building");
+  // TECHNOLOGY
+
+  if (
+    text.includes("react") ||
+    text.includes("node") ||
+    text.includes("express") ||
+    text.includes("api") ||
+    text.includes("python") ||
+    text.includes("javascript") ||
+    text.includes("database")
+  ) {
+    score += 15;
+  } else {
+    missing.push("technology");
+    suggestions.push(
+      "Mention technologies or domain context"
+    );
   }
 
-  if (score < 0) score = 0;
-  if (score > 100) score = 100;
+  // EXPECTED OUTPUT
 
- return {
-  score,
-  missing,
-  suggestions
-};
+  if (
+    text.includes("step by step") ||
+    text.includes("roadmap") ||
+    text.includes("guide") ||
+    text.includes("plan")
+  ) {
+    score += 20;
+  } else {
+    missing.push("expected output");
+    suggestions.push(
+      "Specify the type of response you expect"
+    );
+  }
+
+  // CONSTRAINTS
+
+  if (
+    text.includes("beginner") ||
+    text.includes("advanced") ||
+    text.includes("simple") ||
+    text.includes("production") ||
+    text.includes("scalable")
+  ) {
+    score += 15;
+  } else {
+    missing.push("constraints");
+    suggestions.push(
+      "Add constraints, experience level, or requirements"
+    );
+  }
+
+  // BONUS FOR VERY DETAILED PROMPTS
+
+  if (text.length >= 250) {
+    score += 10;
+  }
+
+  score = Math.min(score, 100);
+
+  return {
+    score,
+    missing,
+    suggestions
+  };
 }
 
-module.exports = { scorePrompt };
+module.exports = {
+  scorePrompt
+};
