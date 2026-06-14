@@ -66,6 +66,7 @@ Backend (Express API)
 Prompt Enhancement Engine
    ↓
 Optimized AI Prompt Output
+```
 🛠️ Tech Stack
 
 Frontend
