@@ -96,23 +96,28 @@ Optimized AI Prompt Output
 git clone https://github.com/zeyadbadawyy/promptica-v22.git
 cd promptica-v22
 ```
-2. Install dependencies
+### 2. Install dependencies
 ```
 npm install
 ```
-4. Start the application
+### 3. Start the application
 ```
 npm start
 ```
 
----
-
 ## 🔐 Environment Variables
 
-Create a `.env` file in the root directory:
+Inside the `.env` file in the root directory:
 
 ```bash
 OPENROUTER_API_KEY=your_api_key_here
+```
+
+u## ⚙️ Setup Steps
+Go to https://openrouter.ai
+Create an account
+Generate your API key
+Paste it into your .env file
 
 ---
 
