@@ -117,6 +117,8 @@ Response
   "enhancedPrompt": "Generate a formal, structured, and well-written professional email with clear tone and proper business etiquette."
 }
 ```
+---
+
 ## 📈 Future Improvements
 GPT API integration for real-time prompt enhancement
 Prompt quality scoring system
@@ -125,17 +127,25 @@ Saved prompt history
 Analytics dashboard
 Multi-language support
 Advanced reasoning-based prompt engine
+
+---
+
 ## 🧩 Project Highlights
 Built for real-world AI prompt optimization
 Clean separation between frontend and backend
 Scalable and modular architecture
 Designed with production-level structure
 Focused on improving LLM interaction quality
+
+---
+
 ## 👨‍💻 Developer
 
-Zeyad Badawy
+<strong>Zeyad Badawy</strong>
 AI & Software Engineering Developer
 📍 Egypt
+
+---
 
 ## 📜 License
 
@@ -143,4 +153,4 @@ This project is licensed under the MIT License.
 
 <div align="center">
 ⭐ If you like this project, consider giving it a star!
-</div> ```
+</div> 
