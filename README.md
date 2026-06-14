@@ -114,13 +114,13 @@ OPENROUTER_API_KEY=your_api_key_here
 ```
 
 ## ⚙️ Setup Steps
-Go to https://openrouter.ai
+-Go to https://openrouter.ai
 
-Create an account
+-Create an account
 
-Generate your API key
+-Generate your API key
 
-Paste it into your .env file
+-Paste it into your .env file
 
 ---
 
