@@ -104,7 +104,19 @@ npm install
 ```
 npm start
 ```
-📡 API Reference
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```bash
+OPENROUTER_API_KEY=your_api_key_here
+
+---
+
+## 📡 API Reference
 Endpoint
 ```
 POST /message
@@ -117,6 +129,7 @@ Response
   "enhancedPrompt": "Generate a formal, structured, and well-written professional email with clear tone and proper business etiquette."
 }
 ```
+
 ---
 
 ## 📈 Future Improvements
