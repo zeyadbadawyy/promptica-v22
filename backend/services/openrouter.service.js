@@ -1,68 +1,10 @@
 const axios = require("axios");
 
-function parseAIReview(text) {
-  const result = {
-    score: null,
-    strengths: [],
-    weaknesses: [],
-    suggestions: [],
-    improvedPrompt: ""
-  };
-
-  const scoreMatch = text.match(
-    /PROMPT SCORE:\s*(\d+)/i
-  );
-
-  if (scoreMatch) {
-    result.score = Number(scoreMatch[1]);
-  }
-
-  const strengthsMatch = text.match(
-    /STRENGTHS:([\s\S]*?)WEAKNESSES:/i
-  );
-
-  const weaknessesMatch = text.match(
-    /WEAKNESSES:([\s\S]*?)SUGGESTIONS:/i
-  );
-
-  const suggestionsMatch = text.match(
-    /SUGGESTIONS:([\s\S]*?)IMPROVED PROMPT:/i
-  );
-
-  const improvedPromptMatch = text.match(
-    /IMPROVED PROMPT:([\s\S]*)/i
-  );
-
-  if (strengthsMatch) {
-    result.strengths = strengthsMatch[1]
-      .split("\n")
-      .map(line => line.replace("-", "").trim())
-      .filter(Boolean);
-  }
-
-  if (weaknessesMatch) {
-    result.weaknesses = weaknessesMatch[1]
-      .split("\n")
-      .map(line => line.replace("-", "").trim())
-      .filter(Boolean);
-  }
-
-  if (suggestionsMatch) {
-    result.suggestions = suggestionsMatch[1]
-      .split("\n")
-      .map(line => line.replace("-", "").trim())
-      .filter(Boolean);
-  }
-
-  if (improvedPromptMatch) {
-    result.improvedPrompt =
-      improvedPromptMatch[1].trim();
-  }
-
-  return result;
-}
-
-async function reviewPrompt(prompt, analysis) {
+async function enhancePrompt(
+  originalPrompt,
+  strategyPrompt,
+  analysis
+) {
   try {
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
@@ -75,28 +17,26 @@ async function reviewPrompt(prompt, analysis) {
             content: `
 You are Promptica AI.
 
-Always respond using EXACTLY:
+Your job is to transform weak prompts into professional high-quality prompts.
 
-PROMPT SCORE: [number]
+Rules:
 
-STRENGTHS:
-- item
-
-WEAKNESSES:
-- item
-
-SUGGESTIONS:
-- item
-
-IMPROVED PROMPT:
-[text]
+- Return ONLY the final improved prompt.
+- Do not explain your reasoning.
+- Do not include scores.
+- Do not include strengths.
+- Do not include weaknesses.
+- Do not include suggestions.
+- Make the prompt detailed, structured, and actionable.
+- Preserve the user's original goal.
 `
           },
+
           {
             role: "user",
             content: `
-User Prompt:
-${prompt}
+Original Prompt:
+${originalPrompt}
 
 Category:
 ${analysis.category}
@@ -104,16 +44,20 @@ ${analysis.category}
 Intents:
 ${analysis.intents.join(", ")}
 
-Review this prompt.
+Generated Strategy:
+${strategyPrompt}
+
+Create the best possible improved version of this prompt.
 `
           }
         ],
 
-        temperature: 0.7,
-        max_tokens: 800
+        temperature: 0.8,
+        max_tokens: 1200
       },
       {
         timeout: 60000,
+
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
@@ -123,16 +67,10 @@ Review this prompt.
       }
     );
 
-    const content =
-      response.data?.choices?.[0]?.message?.content;
-
-    if (!content) {
-      return {
-        error: "No AI review returned."
-      };
-    }
-
-    return parseAIReview(content);
+    return (
+      response.data?.choices?.[0]?.message?.content ||
+      "Unable to generate enhanced prompt."
+    );
 
   } catch (error) {
     console.error("OPENROUTER ERROR:");
@@ -145,12 +83,10 @@ Review this prompt.
       console.error(error.message);
     }
 
-    return {
-      error: "OpenRouter request failed."
-    };
+    return "Unable to generate enhanced prompt.";
   }
 }
 
 module.exports = {
-  reviewPrompt
+  enhancePrompt
 };

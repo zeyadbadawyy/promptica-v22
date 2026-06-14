@@ -6,8 +6,7 @@ const { detectIntent } = require("../services/intent.service");
 const { runStrategy } = require("../services/strategy.engine");
 const { scorePrompt } = require("../services/scoring.service");
 const { generateFeedback } = require("../services/feedback.service");
-const { reviewPrompt } = require("../services/openrouter.service");
-const { mergeResults } = require("../services/merge.service");
+const { enhancePrompt } = require("../services/openrouter.service");
 
 router.post("/improve", async function (req, res) {
   const prompt = req.body?.prompt;
@@ -40,37 +39,31 @@ router.post("/improve", async function (req, res) {
       prompt
     );
 
-    let aiReview = null;
+    let finalPrompt = "";
 
     try {
-      aiReview = await reviewPrompt(prompt, {
-        category: classification.category,
-        intents: normalizedIntents
-      });
-      console.log(
-      "AI REVIEW RAW:",
-      JSON.stringify(aiReview, null, 2)
-);
+      finalPrompt = await enhancePrompt(
+        prompt,
+        strategyOutput.content.join("\n\n"),
+        {
+          category: classification.category,
+          intents: normalizedIntents
+        }
+      );
     } catch (err) {
       console.error(
-        "AI REVIEW ERROR:",
+        "AI ENHANCEMENT ERROR:",
         err.message
       );
-    }
 
-    const merged = mergeResults(
-      scoreResult,
-      feedback,
-      strategyOutput,
-      aiReview
-    );
+      finalPrompt =
+        strategyOutput.content.join("\n\n");
+    }
 
     console.log({
       category: classification.category,
       intents: normalizedIntents,
-      localScore: scoreResult.score,
-      aiScore: aiReview?.score,
-      finalScore: merged.score
+      score: scoreResult.score
     });
 
     res.json({
@@ -79,15 +72,17 @@ router.post("/improve", async function (req, res) {
       analysis: {
         category: classification.category,
         intents: normalizedIntents,
-        score: merged.score,
+        score: scoreResult.score,
         missing: scoreResult.missing,
         classificationScores:
           classification.scores
       },
 
-      feedback: merged.feedback,
+      feedback,
 
-      improved: merged.improved
+      improved: {
+        text: finalPrompt
+      }
     });
 
   } catch (error) {

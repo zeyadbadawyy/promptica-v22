@@ -26,23 +26,28 @@ function mergeResults(
     });
   }
 
-  let finalImproved = strategyOutput;
+  let mergedPrompt = "";
 
   if (aiReview?.improvedPrompt) {
-    finalImproved = {
-      ...strategyOutput,
+    mergedPrompt += aiReview.improvedPrompt;
+  }
 
-      content: [
-        aiReview.improvedPrompt,
-        ...(strategyOutput.content || [])
-      ]
-    };
+  if (
+    strategyOutput?.content &&
+    strategyOutput.content.length > 0
+  ) {
+    mergedPrompt +=
+      "\n\n---\n\nAdditional Guidance:\n\n" +
+      strategyOutput.content.join("\n\n");
   }
 
   return {
     score: finalScore,
-    feedback: finalFeedback,
-    improved: finalImproved
+    feedback: finalFeedback.slice(0, 5),
+
+    improved: {
+      text: mergedPrompt
+    }
   };
 }
 
