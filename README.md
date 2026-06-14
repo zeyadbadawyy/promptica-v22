@@ -113,10 +113,13 @@ Inside the `.env` file in the root directory:
 OPENROUTER_API_KEY=your_api_key_here
 ```
 
-u## ⚙️ Setup Steps
+## ⚙️ Setup Steps
 Go to https://openrouter.ai
+
 Create an account
+
 Generate your API key
+
 Paste it into your .env file
 
 ---
