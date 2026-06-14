@@ -122,6 +122,12 @@ OPENROUTER_API_KEY=your_api_key_here
 
 -Paste it into your .env file
 
+#### AI Model Used
+- 🧠 `poolside/laguna-xs.2:free` via OpenRouter  
+- Used for prompt enhancement and response generation  
+- Optimized for fast, low-cost AI inference  
+
+🔗 Model Link: https://openrouter.ai/poolside/laguna-xs.2:free
 ---
 
 ## 📡 API Reference
