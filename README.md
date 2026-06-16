@@ -168,10 +168,9 @@ Focused on improving LLM interaction quality
 
 ## 👨‍💻 Developer
 
-<strong>Zeyad Badawy</strong>
+**Zeyad Badawy**
 
-AI & Software Engineering Developer
-📍 Egypt
+Full-Stack Developer | Software Engineer
 
 ---
 
